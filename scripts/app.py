@@ -7,13 +7,15 @@ Original file is located at
     https://colab.research.google.com/drive/1afTAXTmg8BecFK-nmtgxbzcOAAGRrV7j
 """
 
-import kagglehub
-
-# Download latest version
-path = kagglehub.dataset_download("joniarroba/noshowappointments")
-
-print("Path to dataset files:", path)
 import os
+
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+path = os.path.join(BASE_DIR, 'data')
+csv_path = os.path.join(path, 'KaggleV2-May-2016.csv')
+print('Loading dataset from:', csv_path)
+
+if not os.path.exists(csv_path):
+    raise FileNotFoundError(f"Dataset not found at {csv_path}")
 
 # ==========================================
 # HEALTHCARE & TELEMEDICINE EDA PROJECT
@@ -37,7 +39,7 @@ from scipy.stats import (
 # LOAD DATASET
 # ==========================================
 
-df = pd.read_csv(os.path.join(path, "KaggleV2-May-2016.csv"))
+df = pd.read_csv(csv_path)
 df.head()
 
 print("="*50)
