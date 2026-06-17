@@ -1,110 +1,115 @@
-# Healthcare Telemedicine Project
+# Healthcare Telemedicine Project — README
 
 ## Overview
 
-This repository contains the Healthcare Telemedicine Project, a data analysis and exploratory study of patient appointment behavior using the Kaggle healthcare dataset. The goal is to uncover patterns around appointment attendance, patient demographics, medical conditions, and waiting time between scheduling and appointment date.
+This repository contains the Healthcare Telemedicine Project: a reproducible exploratory data analysis (EDA) and visualization dashboard built from the Kaggle appointment dataset (stored in `data/`). The analysis explores drivers of appointment attendance (no-shows), the effect of waiting time, demographic and medical-condition correlations, and neighborhood-level patterns.
 
-The project includes data preparation, exploratory data analysis (EDA), feature engineering, statistical tests, and visualization assets to support clear insights for healthcare operations and telemedicine planning.
+A live preview of the interactive dashboard is hosted at: [Healthcare EDA Dashboard](https://health-eda.onrender.com/)
 
-> A preview dashboard for this project is available at: https://health-eda.onrender.com/
+This repo contains two primary ways to use the work:
+- Run the analysis and plots locally (scripts and notebooks).
+- Launch the interactive Streamlit dashboard found in `WebSiteCode/` (recommended for exploration and sharing).
 
-## Dataset
+## Repository structure (summary)
 
-The dataset is stored in `data/KaggleV2-May-2016.csv` and contains appointment records with the following columns:
+- `data/` — raw dataset: `KaggleV2-May-2016.csv`.
+- `notebooks/` — exploratory notebook(s): `Team_1_Project_complete.ipynb`.
+- `scripts/` — analysis scripts (non-interactive), e.g. `scripts/app.py`.
+- `WebSiteCode/` — Streamlit app (multi-page) used for the hosted dashboard.
+  - `WebSiteCode/app.py` — Streamlit app entrypoint.
+  - `WebSiteCode/pages/` — multipage views (EDA, ML, transformation, reports, etc.).
+  - `WebSiteCode/utils/` — helper modules used by the app (`data_loader.py`, `analysis.py`, `ml.py`, etc.).
+  - `WebSiteCode/requirements.txt` — packages required to run the Streamlit site.
+- `visualizations/` — exported static figures (PNG) created by scripts/notebooks.
+- `outputs/` — generated data outputs and artifacts.
+- `ieee_report/` — written report and project documentation.
 
-- `PatientId`: Unique ID for the patient.
-- `AppointmentID`: Unique ID for the appointment.
-- `Gender`: Patient gender (`M` or `F`).
-- `ScheduledDay`: Date and time when the appointment was scheduled.
-- `AppointmentDay`: Date of the appointment.
-- `Age`: Patient age.
-- `Neighbourhood`: Clinic neighborhood.
-- `Scholarship`: Whether the patient is enrolled in Brazil's Bolsa Família program.
-- `Hipertension`: Whether the patient has hypertension.
-- `Diabetes`: Whether the patient has diabetes.
-- `Alcoholism`: Whether the patient has an alcoholism problem.
-- `Handcap`: Whether the patient has a handicap.
-- `SMS_received`: Whether the patient received an SMS reminder.
-- `No-show`: Whether the patient missed the appointment (`Yes` or `No`).
+## What the dashboard and code do
 
-## Key Questions Addressed
+- Load and validate the appointment dataset.
+- Convert `ScheduledDay` and `AppointmentDay` to datetimes and compute `Waiting_Time` (days between scheduling and appointment).
+- Clean and transform data (handle invalid/negative waiting times, outliers in `Age`, and categorical encoding).
+- Produce EDA visualizations: distributions, correlation heatmaps, no-show comparisons, neighborhood summaries.
+- Provide simple ML experiments to predict no-shows and show model metrics (in the `machine_learning` page).
 
-- What patient attributes correlate with missed appointments?
-- How does waiting time between scheduling and appointment affect attendance?
-- Are there demographic patterns in no-shows, such as age or gender?
-- Which neighborhoods have the highest appointment absenteeism?
-- How do medical conditions such as hypertension, diabetes, and alcoholism relate to attendance?
+## Quickstart — Local (recommended)
 
-## Repository Structure
+1. Install Python 3.8+ and create a virtual environment.
 
-- `data/` - Raw dataset files used for analysis.
-- `notebooks/` - Jupyter notebook(s) containing the exploration and model work.
-- `scripts/` - Python script(s) for automated EDA and preprocessing.
-- `outputs/` - Generated charts, graphs, and analysis export files.
-- `visualizations/` - Final visualization assets produced during the project.
-- `presentation/` - Slide deck or presentation files summarizing results.
-- `ieee_report/` - Report and documentation for academic or project submissions.
-- `README.md` - Project documentation and usage instructions.
+```bash
+python -m venv .venv
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
+# or Command Prompt
+.venv\Scripts\activate.bat
+```
 
-## Main Files
+2. Install dependencies for the Streamlit app (from `WebSiteCode`):
 
-- `scripts/app.py` - Main Python script that loads the dataset, performs EDA, feature engineering, and generates visualizations for waiting time, age distribution, gender distribution, and appointment attendance.
-- `notebooks/Team_1_Project_complete.ipynb` - Colab notebook with step-by-step analysis and code cells for the full project workflow.
+```bash
+pip install -r WebSiteCode/requirements.txt
+```
 
-## Usage
+3. Run the Streamlit dashboard locally:
 
-1. Install required Python packages if not already available. Common packages used in this project include:
-   - `pandas`
-   - `numpy`
-   - `seaborn`
-   - `matplotlib`
-   - `scipy`
+```bash
+streamlit run WebSiteCode/app.py
+```
 
-2. Run the main analysis script from the project root:
+The app serves at `http://localhost:8501` by default. Use `--server.port` to change the port.
+
+4. (Optional) Run the non-interactive analysis script used for producing static visualizations and outputs:
 
 ```bash
 python scripts/app.py
 ```
 
-3. Open the notebook to review the interactive analysis:
+5. Open the notebook for step-by-step analysis and reproducibility:
 
 ```bash
 jupyter notebook notebooks/Team_1_Project_complete.ipynb
 ```
 
-## Analysis Highlights
+## Running with Docker (optional)
 
-The project workflow includes:
+If you prefer Docker, create a simple Dockerfile around the `WebSiteCode` folder and expose port 8501. Example commands:
 
-- Loading and validating the appointment dataset.
-- Converting scheduled and appointment dates to datetime format.
-- Creating a new `Waiting_Time` feature representing days between scheduling and appointment.
-- Handling negative waiting times and ensuring valid transformation inputs.
-- Analyzing outliers in age and waiting time.
-- Comparing raw and transformed distributions using logarithmic and Box-Cox transformations.
-- Examining no-show behavior with univariate and bivariate visualizations.
-- Comparing appointment attendance across gender, age, and health conditions.
+```bash
+docker build -t health-eda -f WebSiteCode/Dockerfile .
+docker run -p 8501:8501 health-eda
+```
 
-## Visualizations
+(No official Dockerfile is included; you can create one based on Python slim images and `pip install -r requirements.txt`.)
 
-The repository contains multiple visualization outputs, including:
+## Deployment / Hosted instance
 
-- `visualizations/age_distribution.png`
-- `visualizations/age_outlier_detection.png`
-- `visualizations/age_vs_no_show_boxplot.png`
-- `visualizations/appointment_attendance_pie.png`
-- `visualizations/correlation_heatmap.png`
-- `visualizations/no_show_distribution.png`
-- `visualizations/waiting_time_transformations.png`
+The interactive dashboard is deployed and available at: [Healthcare EDA Dashboard](https://health-eda.onrender.com/)
 
-These charts support the analysis by showing distribution trends, correlations, and appointment attendance behavior.
+If you deploy to Render, Heroku, or another PaaS, typical steps are:
 
-## Notes
+- Point the service to the `WebSiteCode/` directory (or copy its contents) and set the start command to: `streamlit run app.py --server.port $PORT`.
+- Ensure the `requirements.txt` is used to install dependencies.
+- Configure environment variables and storage (if using persistent outputs).
 
-- This project is designed for exploratory analysis rather than production deployment.
-- The dataset covers a real-world patient appointment scenario and is useful for identifying operational improvements in telemedicine scheduling.
-- The repository is structured to keep raw data, code, and visual results separate for better reproducibility.
+## Notes on data and privacy
+
+- The dataset used for analysis is a public Kaggle CSV (`data/KaggleV2-May-2016.csv`). Treat any real patient data with appropriate privacy controls in production.
+- This project is for exploratory analysis and teaching purposes — not for clinical decision making.
+
+## Troubleshooting
+
+- If Streamlit fails to start: verify Python and `pip` in the active environment and confirm packages installed from `WebSiteCode/requirements.txt`.
+- If data fails to load: confirm `data/KaggleV2-May-2016.csv` exists and is readable.
+- To increase logging: run Streamlit with `--logger.level=debug`.
+
+## Contributing
+
+- Fixes, improvements, and additional visualizations are welcome. Please open an issue or submit a pull request.
+- For changes to the deployed app, update `WebSiteCode/` files and redeploy to your hosting provider.
 
 ## Contact
 
-For additional details, open the notebook or review the `ieee_report` folder for the written project documentation.
+Questions or requests: open an issue in this repo or contact the project owner listed in `ieee_report`.
+
+---
+Updated README to include full run and deployment instructions and a link to the hosted dashboard.
