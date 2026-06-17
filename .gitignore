@@ -1,0 +1,51 @@
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Environment variables
+.env
+.env.*
+
+# Build / distribution
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Tests
+.pytest_cache/
+
+# Streamlit cache / config
+.streamlit/
+
+# Logs and outputs
+*.log
+outputs/
+visualizations/
+
+# Data files (large/raw)
+data/*.csv
+data/*.zip
+
+# IDEs
+.idea/
+
+# Wheel / eggs
+*.egg
+*.whl
